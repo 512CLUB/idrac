@@ -39,7 +39,7 @@
 `-- docker-compose.yml
 ```
 
-## 本地开发
+## 本地部署
 
 1. 复制环境变量示例文件：
 
@@ -67,7 +67,7 @@
    ```
 
 5. 打开 [http://localhost:3000](http://localhost:3000)。
-默认用户明密码为admin
+默认用户明密码为`admin`
 
 ## Docker 部署
 
