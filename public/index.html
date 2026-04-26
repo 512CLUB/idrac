@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web SSH Console</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <section id="login-screen" class="login-screen">
+      <form id="login-form" class="login-card">
+        <div class="brand">
+          <span class="brand-mark">SSH</span>
+          <div>
+            <h1>登录控制台</h1>
+            <p>Dell iDRAC Web SSH 操作入口</p>
+          </div>
+        </div>
+
+        <label>
+          用户名
+          <input id="app-username" name="username" autocomplete="username" required />
+        </label>
+
+        <label>
+          密码
+          <input id="app-password" name="password" type="password" autocomplete="current-password" required />
+        </label>
+
+        <label id="totp-field">
+          2FA 验证码
+          <input id="app-totp" name="totpCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6 位动态码" />
+        </label>
+
+        <p id="login-error" class="form-error" role="alert"></p>
+        <button type="submit">登录</button>
+      </form>
+    </section>
+
+    <main id="app-shell" class="app-shell" hidden>
+      <section class="connection-panel" aria-label="SSH connection settings">
+        <div class="brand">
+          <span class="brand-mark">DRAC</span>
+          <div>
+            <h1>iDRAC 控制台</h1>
+            <p>通过 SSH 管理 Dell 服务器</p>
+          </div>
+        </div>
+
+        <form id="connect-form" class="connection-form">
+          <label>
+            主机
+            <input id="host" name="host" autocomplete="hostname" placeholder="192.168.1.10" required />
+          </label>
+
+          <div class="form-row">
+            <label>
+              端口
+              <input id="port" name="port" inputmode="numeric" value="22" required />
+            </label>
+            <label>
+              用户名
+              <input id="username" name="username" autocomplete="username" placeholder="root" required />
+            </label>
+          </div>
+
+          <label>
+            密码
+            <input id="password" name="password" type="password" autocomplete="current-password" />
+          </label>
+
+          <details>
+            <summary>使用私钥登录</summary>
+            <label>
+              私钥
+              <textarea id="privateKey" name="privateKey" spellcheck="false" placeholder="-----BEGIN OPENSSH PRIVATE KEY-----"></textarea>
+            </label>
+            <label>
+              私钥口令
+              <input id="passphrase" name="passphrase" type="password" />
+            </label>
+          </details>
+
+          <div class="actions">
+            <button id="connect" type="submit">连接</button>
+            <button id="disconnect" type="button" disabled>断开</button>
+          </div>
+        </form>
+
+        <section class="saved-panel" aria-label="Saved servers">
+          <div>
+            <h2>已保存服务器</h2>
+            <p>保存主机、端口和用户名</p>
+          </div>
+          <div id="saved-servers" class="saved-servers"></div>
+        </section>
+      </section>
+
+      <section class="dashboard-panel" aria-label="iDRAC dashboard">
+        <div class="dashboard-toolbar">
+          <span id="status" class="status">未连接</span>
+          <div class="toolbar-actions">
+            <button id="theme-toggle" type="button">浅色</button>
+            <button id="logout" type="button">退出</button>
+          </div>
+        </div>
+
+        <div class="dashboard-content">
+          <section class="metric-grid" aria-label="Connection overview">
+            <article class="metric">
+              <span>连接状态</span>
+              <strong id="connection-state">未连接</strong>
+            </article>
+            <article class="metric">
+              <span>当前服务器</span>
+              <strong id="active-server">未连接</strong>
+            </article>
+            <article class="metric">
+              <span>最近操作</span>
+              <strong id="last-action">无</strong>
+            </article>
+          </section>
+
+          <section class="workspace-grid">
+            <div class="operations">
+              <section class="operation-group">
+                <div>
+                  <h2>概览查询</h2>
+                  <p>读取 iDRAC 常用信息</p>
+                </div>
+                <div class="action-grid">
+                  <button type="button" data-idrac-action="power-status" disabled>查询电源</button>
+                  <button type="button" data-idrac-action="service-tag" disabled>服务标签</button>
+                  <button type="button" data-idrac-action="system-info" disabled>系统信息</button>
+                  <button type="button" data-idrac-action="firmware-version" disabled>版本信息</button>
+                  <button type="button" data-idrac-action="network-info" disabled>网络配置</button>
+                  <button type="button" data-idrac-action="sensor-info" disabled>传感器状态</button>
+                </div>
+              </section>
+
+              <section class="operation-group">
+                <div>
+                  <h2>日志与任务</h2>
+                  <p>查看事件、会话和队列</p>
+                </div>
+                <div class="action-grid">
+                  <button type="button" data-idrac-action="sel-count" disabled>日志数量</button>
+                  <button type="button" data-idrac-action="sel-first-20" disabled>前 20 条日志</button>
+                  <button type="button" data-idrac-action="session-info" disabled>当前会话</button>
+                  <button type="button" data-idrac-action="jobqueue-view" disabled>任务队列</button>
+                </div>
+              </section>
+
+              <section class="operation-group">
+                <div>
+                  <h2>电源与维护</h2>
+                  <p>会改变服务器状态的操作需要确认</p>
+                </div>
+                <div class="action-grid">
+                  <button type="button" data-idrac-action="power-on" disabled>开机</button>
+                  <button type="button" data-idrac-action="graceful-shutdown" data-confirm="确认要正常关机吗？" disabled>正常关机</button>
+                  <button type="button" data-idrac-action="power-cycle" data-confirm="确认要重启电源吗？服务器会断电再上电。" disabled>电源重启</button>
+                  <button type="button" data-idrac-action="force-power-off" data-confirm="确认要强制断电吗？这会立即关闭服务器。" disabled>强制断电</button>
+                  <button type="button" data-idrac-action="idrac-reset" data-confirm="确认要重启 iDRAC 管理控制器吗？执行后 iDRAC 可能需要约 1-2 分钟恢复。" disabled>重启 iDRAC</button>
+                </div>
+              </section>
+            </div>
+
+            <aside class="result-panel" aria-label="Operation result">
+              <div>
+                <h2 id="result-title">操作结果</h2>
+                <p id="result-summary">连接 iDRAC 后选择一个操作。</p>
+              </div>
+              <pre id="result-output">暂无结果</pre>
+              <details class="debug-panel">
+                <summary>调试输出</summary>
+                <pre id="debug-output"></pre>
+              </details>
+            </aside>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
