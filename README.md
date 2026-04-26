@@ -1,25 +1,27 @@
 # iDRAC Web SSH Console
 
-A lightweight web console for connecting to Dell iDRAC over SSH, running common `racadm` commands, and presenting the results in a browser-friendly dashboard.
+[English README](README_EN.md)
 
-## Features
+这是一个轻量级的 Web 控制台，用于通过 SSH 连接 Dell iDRAC，执行常用 `racadm` 命令，并以更适合浏览器查看的方式展示结果。
 
-- App-level login before opening any SSH session
-- Optional TOTP-based 2FA for the web login
-- Connect to iDRAC with either password auth or an SSH private key
-- One-click shortcuts for common `racadm` operations
-- Recent server shortcuts stored in the browser
-- Docker and Docker Compose support for quick deployment
+## 功能特性
 
-## Tech Stack
+- 在建立 SSH 会话前先进行应用级登录
+- 支持可选的基于 TOTP 的 2FA 双因素认证
+- 支持使用密码或 SSH 私钥连接 iDRAC
+- 内置常用 `racadm` 操作的一键快捷按钮
+- 在浏览器中保存最近使用过的服务器快捷项
+- 提供 Docker 与 Docker Compose 部署支持
+
+## 技术栈
 
 - Node.js
 - Express
-- WebSocket (`ws`)
+- WebSocket（`ws`）
 - `ssh2`
-- Plain HTML, CSS, and browser-side JavaScript
+- 原生 HTML、CSS 与浏览器端 JavaScript
 
-## Project Structure
+## 项目结构
 
 ```text
 .
@@ -33,71 +35,71 @@ A lightweight web console for connecting to Dell iDRAC over SSH, running common 
 `-- docker-compose.yml
 ```
 
-## Local Development
+## 本地开发
 
-1. Copy the example environment file:
+1. 复制环境变量示例文件：
 
    ```bash
    cp .env.example .env
    ```
 
-2. Update the values in `.env`, especially:
+2. 修改 `.env` 中的配置，尤其是以下字段：
    - `APP_USERNAME`
    - `APP_PASSWORD`
    - `SESSION_SECRET`
    - `APP_TOTP_SECRET`
    - `SSH_ALLOWED_HOSTS`
 
-3. Install dependencies:
+3. 安装依赖：
 
    ```bash
    npm install
    ```
 
-4. Start the app:
+4. 启动项目：
 
    ```bash
    npm run dev
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000).
+5. 打开 [http://localhost:3000](http://localhost:3000)。
 
-## Docker
+## Docker 部署
 
-Build and run with Docker Compose:
+使用 Docker Compose 构建并启动：
 
 ```bash
 docker compose up --build
 ```
 
-The service listens on port `3000` by default.
+服务默认监听 `3000` 端口。
 
-## Environment Variables
+## 环境变量
 
-| Variable | Description |
+| 变量名 | 说明 |
 | --- | --- |
-| `PORT` | HTTP port for the web app |
-| `APP_USERNAME` | Username required for the web login |
-| `APP_PASSWORD` | Password required for the web login |
-| `SESSION_SECRET` | Secret used to sign the session cookie |
-| `APP_TOTP_SECRET` | Base32 TOTP secret for optional 2FA |
-| `SSH_ALLOWED_HOSTS` | Comma-separated allowlist of target hosts |
+| `PORT` | Web 服务监听端口 |
+| `APP_USERNAME` | Web 登录用户名 |
+| `APP_PASSWORD` | Web 登录密码 |
+| `SESSION_SECRET` | 用于签名会话 Cookie 的密钥 |
+| `APP_TOTP_SECRET` | 可选的 Base32 TOTP 双因素认证密钥 |
+| `SSH_ALLOWED_HOSTS` | 允许连接的目标主机白名单，多个值用逗号分隔 |
 
-## Security Notes
+## 安全说明
 
-- Change all default credentials before exposing the app to a network.
-- Keep `.env` local and do not commit it.
-- Set a long random `SESSION_SECRET`.
-- Use `SSH_ALLOWED_HOSTS` to restrict which iDRAC hosts the app may reach.
-- Enable HTTPS and set up reverse-proxy protection when deploying publicly.
+- 对外使用前请务必修改所有默认凭据。
+- `.env` 仅保留在本地，不要提交到仓库。
+- `SESSION_SECRET` 请使用足够长且随机的字符串。
+- 建议通过 `SSH_ALLOWED_HOSTS` 限制可连接的 iDRAC 主机范围。
+- 如果要公开部署，建议配合 HTTPS 和反向代理一起使用。
 
-## Typical Use Cases
+## 典型使用场景
 
-- Quick Dell iDRAC health checks
-- Power control from a browser
-- Reading system, firmware, network, and sensor information
-- Reviewing SEL logs, active sessions, and job queue status
+- 快速检查 Dell iDRAC 状态
+- 在浏览器中进行电源控制
+- 查看系统、固件、网络与传感器信息
+- 检查 SEL 日志、活动会话和任务队列状态
 
-## License
+## 许可证
 
-See the repository `LICENSE` file for license details.
+许可证信息请查看仓库中的 `LICENSE` 文件。
