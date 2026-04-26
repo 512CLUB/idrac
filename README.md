@@ -43,7 +43,7 @@
    cp .env.example .env
    ```
 
-2. 修改 `.env` 中的配置，尤其是以下字段：
+2. 修改 `.env` 中的配置，必需修改以下字段：
    - `APP_USERNAME`
    - `APP_PASSWORD`
    - `SESSION_SECRET`
