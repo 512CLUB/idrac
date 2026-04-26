@@ -67,6 +67,7 @@
    ```
 
 5. 打开 [http://localhost:3000](http://localhost:3000)。
+默认用户明密码为admin
 
 ## Docker 部署
 
