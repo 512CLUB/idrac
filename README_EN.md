@@ -2,7 +2,11 @@
 
 [中文说明](README.md)
 
-A lightweight web console for connecting to Dell iDRAC over SSH, running common `racadm` commands, and presenting the results in a browser-friendly dashboard.
+This project may be used for commercial purposes, but you must give proper attribution!
+
+Because older Dell server models only support TLS 1.0 encryption, many modern browsers can no longer open the iDRAC web interface properly. To make it easier to use, I created this tool for more convenient access to iDRAC.
+
+This is a lightweight web console for connecting to Dell iDRAC via SSH. The iDRAC SSH port does not need to be exposed to the public internet, making it convenient to use anytime and anywhere, while displaying the results in a way that is more suitable for viewing in a browser.
 
 ## Features
 
